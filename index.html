@@ -1,197 +1,235 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cable Containment Pro</title>
-
-<style>
-body{
-    font-family: system-ui, -apple-system, sans-serif;
-    background:#fffafb;
-    margin:0;
-    padding:20px;
-}
-
-.container{
-    max-width:480px;
-    margin:auto;
-}
-
-.card{
-    background:white;
-    padding:20px;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(231,2,116,0.1);
-    margin-bottom:20px;
-}
-
-h1{
-    text-align:center;
-    color:#e70274;
-}
-
-select,input{
-    width:100%;
-    padding:12px;
-    margin-top:5px;
-    margin-bottom:15px;
-    border-radius:12px;
-    border:1px solid #ddd;
-    font-size:16px;
-}
-
-button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:14px;
-    background:linear-gradient(135deg,#e70274,#ff5e9e);
-    color:white;
-    font-weight:bold;
-    font-size:16px;
-}
-
-.result{
-    background:#ffeaf4;
-    padding:15px;
-    border-radius:15px;
-    margin-top:10px;
-}
-
-.option{
-    padding:12px;
-    border-bottom:1px solid #eee;
-}
-
-.best{
-    border:2px solid #e70274;
-    background:#fff0f6;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPU Cable Calc Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background-color: #fffafb;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card { 
+            background: white; 
+            border-radius: 1.5rem; 
+            box-shadow: 0 10px 25px -5px rgba(231, 2, 116, 0.1); 
+            border: 1px solid rgba(231, 2, 116, 0.05);
+        }
+        .spu-gradient {
+            background: linear-gradient(135deg, #e70274 0%, #ff5e9e 100%);
+        }
+        .spu-text { color: #e70274; }
+        .install-radio:checked + div {
+            border-color: #e70274;
+            background-color: #fff0f6;
+            color: #e70274;
+            box-shadow: 0 0 0 1px #e70274;
+        }
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(231, 2, 116, 0.1);
+            display: flex;
+            align-items: center;
+            z-index: 50;
+        }
+    </style>
 </head>
+<body class="antialiased text-slate-700">
+    <div class="max-w-md mx-auto px-6 pt-10 pb-32">
+        <div class="text-center mb-8">
+            <div class="inline-block p-4 bg-white rounded-3xl shadow-sm mb-4 border border-pink-50">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e70274" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 12V7a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"></path><circle cx="9" cy="9" r=".5" fill="#e70274"/><circle cx="9" cy="13" r=".5" fill="#e70274"/><circle cx="9" cy="17" r=".5" fill="#e70274"/></svg>
+            </div>
+            <h1 class="text-2xl font-bold spu-text tracking-tight">Cable & Containment</h1>
+            <p class="text-slate-400 text-sm font-light">เครื่องมือคำนวณสำหรับวิศวกรไฟฟ้า</p>
+        </div>
 
-<body>
+        <div class="card p-6 mb-6">
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-2">ประเภทสายไฟฟ้า</label>
+                    <div class="relative">
+                        <select id="cableType" class="w-full rounded-xl border-slate-100 bg-slate-50 p-4 outline-none focus:ring-2 focus:ring-pink-500 transition-all border appearance-none">
+                            <option value="iec01">IEC 01 (THW)</option>
+                            <option value="nyy1c">NYY 1/C</option>
+                            <option value="xlpe1c">XLPE 1/C</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path></svg>
+                        </div>
+                    </div>
+                </div>
 
-<div class="container">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-2">ขนาด (mm²)</label>
+                        <select id="cableSize" class="w-full rounded-xl border-slate-100 bg-slate-50 p-4 outline-none focus:ring-2 focus:ring-pink-500 border appearance-none"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-2">จำนวน (เส้น)</label>
+                        <input type="number" id="cableQty" value="3" min="1" class="w-full rounded-xl border-slate-100 bg-slate-50 p-4 outline-none focus:ring-2 focus:ring-pink-500 border text-center font-semibold">
+                    </div>
+                </div>
 
-<h1>Cable Containment Pro</h1>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-3 text-center">ระบบการติดตั้ง</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="installType" value="conduit" checked class="hidden install-radio">
+                            <div class="text-center p-3 rounded-xl border border-slate-100 bg-slate-50 text-sm font-medium transition-all">ท่อร้อยสาย</div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="installType" value="wireway" class="hidden install-radio">
+                            <div class="text-center p-3 rounded-xl border border-slate-100 bg-slate-50 text-sm font-medium transition-all">รางเดินสาย</div>
+                        </label>
+                    </div>
+                </div>
 
-<div class="card">
+                <button onclick="calculate()" class="w-full spu-gradient text-white py-4 rounded-2xl font-bold shadow-lg shadow-pink-200 active:scale-[0.97] transition-all mt-4 text-lg">
+                    เริ่มการคำนวณ
+                </button>
+            </div>
+        </div>
 
-<label>ประเภทสาย</label>
-<select id="cableType"></select>
+        <div id="resultArea" class="hidden space-y-4 animate-[fadeIn_0.5s_ease-out]">
+            <div class="card p-6 spu-gradient text-white relative overflow-hidden">
+                <div class="relative z-10">
+                    <p class="text-pink-100 text-[10px] uppercase tracking-widest mb-1 opacity-90 font-medium">ขนาดแนะนำ (Standard Recommended)</p>
+                    <p id="recSize" class="text-3xl font-bold">-</p>
+                </div>
+                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="card p-5 text-center">
+                    <p class="text-slate-400 text-[10px] uppercase font-bold mb-1">พื้นที่หน้าตัดสาย</p>
+                    <p id="totalArea" class="text-lg font-bold text-slate-800">-</p>
+                </div>
+                <div class="card p-5 text-center">
+                    <p class="text-slate-400 text-[10px] uppercase font-bold mb-1">พื้นที่ว่างคงเหลือ</p>
+                    <p id="remainPercent" class="text-lg font-bold">-</p>
+                </div>
+            </div>
 
-<label>ขนาด (mm²)</label>
-<select id="cableSize"></select>
+            <div class="card p-5">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">ตัวเลือกขนาดอื่นๆ ที่ใช้ได้</p>
+                <div id="otherSizes" class="flex flex-wrap gap-2"></div>
+            </div>
+        </div>
+    </div>
 
-<label>จำนวน (เส้น)</label>
-<input type="number" id="cableQty" value="4">
+    <div class="footer-fixed">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 spu-bg rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-sm spu-gradient">
+                SPU
+            </div>
+            <div class="border-l border-slate-200 pl-3">
+                <p class="text-[12px] font-bold spu-text leading-tight">Sripatum University</p>
+                <p class="text-[9px] text-slate-400 font-medium">Faculty of Engineering</p>
+            </div>
+        </div>
+        <div class="ml-auto opacity-20">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+    </div>
 
-<label>วิธีติดตั้ง</label>
-<select id="installType">
-<option value="conduit">ท่อ EMT</option>
-<option value="wireway">ราง Wireway</option>
-</select>
+    <script>
+        // ข้อมูลยังคงเดิมตาม Logic การคำนวณที่ถูกต้อง
+        const cableData = {
+            iec01: { "1.5": 8.5, "2.5": 12.5, "4": 16.6, "6": 21.2, "10": 35.2, "16": 47.7, "25": 73.8, "35": 93.9, "50": 129, "70": 167, "95": 230, "120": 278, "150": 343 },
+            nyy1c: { "1": 60.8, "1.5": 66.5, "2.5": 75.4, "4": 86.6, "6": 95, "10": 113, "16": 133, "25": 165, "35": 201, "50": 227, "70": 284, "95": 363, "120": 416 },
+            xlpe1c: { "1.5": 33.1, "2.5": 38.4, "4": 44.1, "6": 50.2, "10": 56.7, "16": 70.8, "25": 104, "35": 123, "50": 154, "70": 189, "95": 241 }
+        };
 
-<button onclick="calculate()">คำนวณ</button>
+        const conduitData = [
+            { name: "1/2\"", area40: 71 }, { name: "3/4\"", area40: 126 }, { name: "1\"", area40: 196 },
+            { name: "1 1/4\"", area40: 322 }, { name: "1 1/2\"", area40: 503 }, { name: "2\"", area40: 785 },
+            { name: "2 1/2\"", area40: 1327 }, { name: "3\"", area40: 2011 }
+        ];
 
-</div>
+        const wirewayData = [
+            { name: "50x75", area20: 750 }, { name: "50x100", area20: 1000 },
+            { name: "75x100", area20: 1500 }, { name: "100x100", area20: 2000 },
+            { name: "100x150", area20: 3000 }
+        ];
 
-<div id="result"></div>
+        function updateSizes() {
+            const type = document.getElementById('cableType').value;
+            const sizeSelect = document.getElementById('cableSize');
+            sizeSelect.innerHTML = '';
+            Object.keys(cableData[type]).forEach(size => {
+                let opt = document.createElement('option');
+                opt.value = size;
+                opt.innerHTML = size;
+                sizeSelect.appendChild(opt);
+            });
+        }
 
-</div>
+        document.getElementById('cableType').onchange = updateSizes;
+        updateSizes();
 
-<script>
-const cableData = {
-    iec01: { "1.5":8.5,"2.5":12.5,"4":16.6,"6":21.2,"10":35.2,"16":47.7,"25":73.8,"35":93.9,"50":129 },
-    nyy1c: { "1":60.8,"1.5":66.5,"2.5":75.4,"4":86.6,"6":95,"10":113,"16":133 },
-    xlpe1c: { "1.5":33.1,"2.5":38.4,"4":44.1,"6":50.2,"10":56.7,"16":70.8 }
-};
+        function calculate() {
+            const type = document.getElementById('cableType').value;
+            const size = document.getElementById('cableSize').value;
+            const qty = parseInt(document.getElementById('cableQty').value) || 0;
+            const installType = document.querySelector('input[name="installType"]:checked').value;
 
-const conduitData = [
-    { name:'1/2"', area:71, price:145 },
-    { name:'3/4"', area:126, price:195 },
-    { name:'1"', area:196, price:290 },
-    { name:'1 1/4"', area:322, price:420 },
-    { name:'1 1/2"', area:503, price:550 },
-    { name:'2"', area:785, price:780 }
-];
+            const unitArea = cableData[type][size];
+            const totalCableArea = unitArea * qty;
 
-const wirewayData = [
-    { name:"50x75", area:750, price:380 },
-    { name:"50x100", area:1000, price:450 },
-    { name:"75x100", area:1500, price:580 },
-    { name:"100x100", area:2000, price:720 }
-];
+            let results = [];
+            let limitField = installType === 'conduit' ? 'area40' : 'area20';
 
-const cableTypeSelect = document.getElementById("cableType");
-const cableSizeSelect = document.getElementById("cableSize");
+            if (installType === 'conduit') {
+                results = conduitData.filter(c => c.area40 >= totalCableArea);
+            } else {
+                results = wirewayData.filter(w => w.area20 >= totalCableArea);
+            }
 
-Object.keys(cableData).forEach(type=>{
-    let opt=document.createElement("option");
-    opt.value=type;
-    opt.text=type.toUpperCase();
-    cableTypeSelect.appendChild(opt);
-});
+            const resArea = document.getElementById('resultArea');
+            resArea.classList.remove('hidden');
 
-function updateSizes(){
-    cableSizeSelect.innerHTML="";
-    let type=cableTypeSelect.value;
-    Object.keys(cableData[type]).forEach(size=>{
-        let opt=document.createElement("option");
-        opt.value=size;
-        opt.text=size;
-        cableSizeSelect.appendChild(opt);
-    });
-}
+            if (results.length > 0) {
+                const rec = (installType === 'conduit' ? "ท่อ " : "ราง ") + results[0].name;
+                const limit = results[0][limitField];
+                const remain = ((limit - totalCableArea) / limit * 100).toFixed(1);
+                
+                document.getElementById('recSize').innerText = rec;
+                document.getElementById('remainPercent').innerText = remain + "%";
+                document.getElementById('remainPercent').className = "text-lg font-bold " + (remain < 10 ? "text-amber-500" : "text-emerald-500");
+            } else {
+                document.getElementById('recSize').innerText = "เกินขนาดมาตรฐาน";
+                document.getElementById('remainPercent').innerText = "N/A";
+            }
 
-cableTypeSelect.addEventListener("change",updateSizes);
-updateSizes();
+            document.getElementById('totalArea').innerText = totalCableArea.toFixed(1) + " mm²";
 
-function calculate(){
-    let type=cableTypeSelect.value;
-    let size=cableSizeSelect.value;
-    let qty=parseInt(document.getElementById("cableQty").value);
-    let install=document.getElementById("installType").value;
-
-    if(!qty||qty<=0){alert("กรอกจำนวนให้ถูกต้อง");return;}
-
-    let totalArea=cableData[type][size]*qty;
-
-    let master=install==="conduit"?conduitData:wirewayData;
-
-    master.sort((a,b)=>a.area-b.area);
-
-    let options=master.filter(x=>x.area>=totalArea);
-
-    let resultDiv=document.getElementById("result");
-    resultDiv.innerHTML="";
-
-    if(options.length===0){
-        resultDiv.innerHTML="<div class='card'>ไม่มีขนาดที่รองรับ</div>";
-        return;
-    }
-
-    let best=options[0];
-
-    let html="<div class='card result'>";
-    html+="<b>แนะนำ: "+best.name+"</b><br>";
-    html+="ราคาโดยประมาณ: ฿"+best.price.toLocaleString();
-    html+="</div>";
-
-    html+="<div class='card'>";
-    options.forEach((opt,i)=>{
-        html+="<div class='option "+(i===0?"best":"")+"'>";
-        html+=opt.name+" — ฿"+opt.price.toLocaleString();
-        if(i===0) html+=" (ประหยัดสุด)";
-        html+="</div>";
-    });
-    html+="</div>";
-
-    resultDiv.innerHTML=html;
-}
-</script>
-
+            const otherList = document.getElementById('otherSizes');
+            otherList.innerHTML = '';
+            results.slice(1, 4).forEach(r => {
+                let span = document.createElement('span');
+                span.className = "bg-white text-slate-600 px-4 py-2 rounded-xl text-xs font-semibold border border-slate-100 shadow-sm";
+                span.innerText = r.name;
+                otherList.appendChild(span);
+            });
+            
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </body>
 </html>
