@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SPU Cable Calc Pro (EIT Standard)</title>
+    <title>SPU Cable Calc Pro (Updated Table 4.7)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS เดิมที่มีการปรับแต่งเล็กน้อยเพื่อความสวยงาม */
+        /* CSS ยังคงเดิมเพื่อความสวยงามและใช้งานง่ายบนมือถือ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --spu: #e70274; --spu-dark: #b8005c; --spu-light: #ff5e9e; --spu-pale: #fff0f7;
@@ -15,17 +15,11 @@
             --shadow: 0 8px 32px -8px rgba(231, 2, 116, 0.18); --radius: 1.25rem;
         }
         body { font-family: 'Kanit', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; position: relative; }
-        body::before {
-            content: ''; position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 0;
-        }
         .header { background: rgba(255, 255, 255, 0.8); border-bottom: 1px solid var(--border); padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
         .header-inner { max-width: 480px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; }
         .logo { display: flex; align-items: center; gap: 10px; }
         .logo-badge { width: 36px; height: 36px; background: linear-gradient(135deg, var(--spu) 0%, var(--spu-light) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 11px; color: white; font-weight: 700; }
         .logo-text strong { display: block; font-size: 12px; color: var(--spu); font-weight: 700; }
-        .logo-text span { font-size: 9px; color: var(--ink-soft); }
         .main { max-width: 480px; margin: 0 auto; padding: 1.5rem 1.25rem 7rem; position: relative; z-index: 1; }
         .hero { text-align: center; padding: 1.75rem 0 1.25rem; }
         .hero h1 { font-size: 1.6rem; font-weight: 700; }
@@ -68,16 +62,16 @@
     <div class="header-inner">
         <div class="logo">
             <div class="logo-badge">SPU</div>
-            <div class="logo-text"><strong>Cable Calc Pro</strong><span>Faculty of Engineering</span></div>
+            <div class="logo-text"><strong>Cable Calc Pro</strong><span>Engineering Tool</span></div>
         </div>
-        <div style="font-size: 10px; color: var(--spu); font-weight: bold;">EIT Standard</div>
+        <div style="font-size: 10px; color: var(--spu); font-weight: bold;">Table 4.7 Update</div>
     </div>
 </header>
 
 <main class="main">
     <div class="hero">
         <h1>คำนวณ<span>สาย&ท่อ</span>ไฟฟ้า</h1>
-        <p>อ้างอิงมาตรฐาน วสท. และ กฟน./กฟภ.</p>
+        <p>อัปเดตข้อมูลตาม ตารางที่ 4.7 (Wireways)</p>
     </div>
 
     <div class="card">
@@ -97,7 +91,7 @@
             </div>
             <div>
                 <label class="lbl">จำนวน (เส้น)</label>
-                <div class="input-wrap"><input type="number" id="cableQty" value="3" min="1"></div>
+                <div class="input-wrap"><input type="number" id="cableQty" value="10" min="1"></div>
             </div>
         </div>
 
@@ -113,12 +107,12 @@
             </label>
         </div>
 
-        <button class="btn-calc" onclick="calculate()">คำนวณตามมาตรฐาน</button>
+        <button class="btn-calc" onclick="calculate()">ตรวจสอบขนาดมาตรฐาน</button>
     </div>
 
     <div id="resultArea">
         <div class="result-hero">
-            <div style="font-size:10px; opacity:0.8">ขนาดที่เหมาะสมที่สุด</div>
+            <div style="font-size:10px; opacity:0.8">ผลการคำนวณแนะนำ</div>
             <div class="result-value" id="recSize">—</div>
             <div id="recSub" style="font-size:0.85rem; margin-top:4px;">—</div>
             <div class="result-fill-bar"><div class="result-fill-inner" id="fillBar"></div></div>
@@ -133,13 +127,13 @@
                 <div style="font-weight:700" id="totalArea">—</div>
             </div>
             <div class="stat-card">
-                <div class="lbl">เกณฑ์พื้นที่ว่าง (วสท.)</div>
+                <div class="lbl">ข้อกำหนดพื้นที่ว่าง</div>
                 <div style="font-weight:700" id="limitText">—</div>
             </div>
         </div>
 
         <div class="card" style="padding:1.25rem">
-            <div class="lbl">ตัวเลือกขนาดอื่นๆ</div>
+            <div class="lbl">ตรวจสอบขนาดราง/ท่อ ทั้งหมด</div>
             <div class="size-chips" id="sizeChips"></div>
         </div>
     </div>
@@ -158,25 +152,29 @@
 </div>
 
 <script>
-    // ข้อมูลพื้นที่หน้าตัดสายไฟรวมเปลือก (mm2) - อ้างอิงโดยประมาณ
+    // พื้นที่หน้าตัดสายไฟอ้างอิงสำหรับ IEC 01 เพื่อให้สอดคล้องกับตาราง 4.7
     const cableData = {
-        iec01:  { "1.5":8.5, "2.5":12.5, "4":16.6, "6":21.2, "10":35.2, "16":47.7, "25":73.8, "35":93.9, "50":129, "70":167, "95":230, "120":278, "150":343 },
-        nyy1c:  { "1":60.8, "1.5":66.5, "2.5":75.4, "4":86.6, "6":95, "10":113, "16":133, "25":165, "35":201, "50":227, "70":284, "95":363, "120":416 },
-        xlpe1c: { "1.5":33.1, "2.5":38.4, "4":44.1, "6":50.2, "10":56.7, "16":70.8, "25":104, "35":123, "50":154, "70":189, "95":241 }
+        iec01:  { "1.5":11.3, "2.5":12.5, "4":16.6, "6":21.2, "10":35.2, "16":47.7, "25":73.8, "35":93.9, "50":129, "70":167, "95":230, "120":278, "150":343, "185":426, "240":555, "300":690 },
+        nyy1c:  { "1":60.8, "1.5":66.5, "2.5":75.4, "4":86.6, "6":95, "10":113, "16":133, "25":165, "35":201, "50":227, "70":284, "95":363 },
+        xlpe1c: { "1.5":33.1, "2.5":38.4, "4":44.1, "6":50.2, "10":56.7, "16":70.8, "25":104, "35":123, "50":154 }
     };
 
-    // ข้อมูลท่อ (Internal Area)
     const conduitData = [ 
         {name:'1/2"', area:150}, {name:'3/4"', area:260}, {name:'1"', area:440}, 
-        {name:'1 1/4"', area:780}, {name:'1 1/2"', area:1060}, {name:'2"', area:1760}, 
-        {name:'2 1/2"', area:2500}, {name:'3"', area:3800} 
+        {name:'1 1/4"', area:780}, {name:'1 1/2"', area:1060}, {name:'2"', area:1760}
     ];
 
-    // ข้อมูลราง (คูณพื้นที่จริง)
+    // ปรับข้อมูลตามรูปภาพ ตาราง 4.7
     const wirewayData = [ 
-        {name:"50×75", area: 50*75}, {name:"50×100", area: 50*100}, 
-        {name:"75×100", area: 75*100}, {name:"100×100", area: 100*100}, 
-        {name:"100×150", area: 100*150}, {name:"150×150", area: 150*150} 
+        {name:"50x75", area: 50*75}, 
+        {name:"50x100", area: 50*100}, 
+        {name:"75x100", area: 75*100}, 
+        {name:"100x100", area: 100*100}, 
+        {name:"100x150", area: 100*150}, 
+        {name:"100x200", area: 100*200}, 
+        {name:"100x250", area: 100*250}, 
+        {name:"100x300", area: 100*300}, 
+        {name:"150x300", area: 150*300} 
     ];
 
     let lastCalc = null;
@@ -198,14 +196,13 @@
         const unitArea = cableData[type][size];
         const totalCableArea = unitArea * qty;
         
-        // --- Logic ตามมาตรฐาน วสท. ---
         let limit;
         if (install === 'conduit') {
             if (qty === 1) limit = 0.53;
             else if (qty === 2) limit = 0.31;
             else limit = 0.40;
         } else {
-            limit = 0.20; // รางเดินสายใช้ 20% ของพื้นที่หน้าตัดรวม
+            limit = 0.20; // รางเดินสายตามกฎ 20%
         }
 
         const dataset = install === 'conduit' ? conduitData : wirewayData;
@@ -217,7 +214,6 @@
         });
 
         const recommended = allOptions.find(o => o.fits) || allOptions[allOptions.length-1];
-        
         lastCalc = { type, size, qty, install, totalCableArea, limit, allOptions, recommended };
         renderResult();
     }
@@ -226,11 +222,11 @@
         const c = lastCalc;
         document.getElementById('resultArea').style.display = 'block';
         document.getElementById('recSize').textContent = (c.install === 'conduit' ? 'ท่อ ' : 'ราง ') + c.recommended.name;
-        document.getElementById('recSub').textContent = `ใช้งาน ${c.recommended.usedPct}% (เกณฑ์มาตรฐานไม่เกิน ${(c.limit*100)}%)`;
+        document.getElementById('recSub').textContent = `ใช้พื้นที่ ${c.recommended.usedPct}% (เกณฑ์สูงสุด ${(c.limit*100)}%)`;
         document.getElementById('fillBar').style.width = Math.min(c.recommended.usedPct * (1/c.limit), 100) + '%';
         document.getElementById('fillPctText').textContent = c.recommended.usedPct + '%';
         document.getElementById('totalArea').textContent = c.totalCableArea.toFixed(2) + ' mm²';
-        document.getElementById('limitText').textContent = (c.limit * 100) + '% ของพื้นที่';
+        document.getElementById('limitText').textContent = (c.limit * 100) + '% (วสท.)';
 
         const chips = document.getElementById('sizeChips');
         chips.innerHTML = '';
@@ -247,7 +243,7 @@
         const c = lastCalc;
         const opt = c.allOptions[idx];
         document.getElementById('modalTitle').textContent = 'รายละเอียดขนาด ' + opt.name;
-        document.getElementById('modalSub').textContent = `สาย ${c.size} mm² จำนวน ${c.qty} เส้น (พื้นที่รวม ${c.totalCableArea.toFixed(2)} mm²)`;
+        document.getElementById('modalSub').textContent = `สาย ${c.size} mm² จำนวน ${c.qty} เส้น`;
         
         document.getElementById('compareBody').innerHTML = c.allOptions.map(o => `
             <tr style="${o === opt ? 'background:var(--spu-pale)' : ''}">
@@ -258,9 +254,10 @@
         `).join('');
 
         document.getElementById('modalDetail').innerHTML = `
-            <b>ข้อมูลทางเทคนิค:</b><br>
-            - พื้นที่ภายในอุปกรณ์: ${opt.area.toLocaleString()} mm²<br>
-            - เกณฑ์พื้นที่ใช้งานสูงสุด: ${(opt.area * c.limit).toFixed(2)} mm² (${(c.limit*100)}%)
+            <b>ข้อมูลทางเทคนิค (อิงตาราง 4.7):</b><br>
+            - พื้นที่รางทั้งหมด: ${opt.area.toLocaleString()} mm²<br>
+            - พื้นที่สายไฟรวม: ${c.totalCableArea.toFixed(2)} mm²<br>
+            - ขีดจำกัดพื้นที่ใช้งาน (20%): ${(opt.area * 0.2).toFixed(2)} mm²
         `;
         document.getElementById('compareModal').classList.add('open');
     }
