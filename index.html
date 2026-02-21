@@ -6,31 +6,34 @@
     <title>SPU Cable Calc Pro — Table 4.7 Standard</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS ปรับปรุงเพื่อความชัดเจนของข้อมูล */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --spu: #e70274; --spu-pale: #fff0f7; --ink: #1a0a12; --ink-soft: #6b4a5a;
-            --surface: #fffafb; --card: #ffffff; --border: rgba(231, 2, 116, 0.08);
-            --shadow: 0 8px 32px -8px rgba(231, 2, 116, 0.18); --radius: 1.25rem;
+            --spu: #e70274; --spu-dark: #b8005c; --spu-light: #ff5e9e; --spu-pale: #fff0f7;
+            --ink: #1a0a12; --ink-soft: #6b4a5a; --surface: #fffafb; --card: #ffffff;
+            --border: rgba(231, 2, 116, 0.08); --shadow: 0 8px 32px -8px rgba(231, 2, 116, 0.18); --radius: 1.25rem;
         }
-        body { font-family: 'Kanit', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; padding-bottom: 50px; }
+        body { font-family: 'Kanit', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; }
         .header { background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid var(--border); padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
         .header-inner { max-width: 480px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; }
         .logo-badge { width: 36px; height: 36px; background: var(--spu); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 11px; }
         .main { max-width: 480px; margin: 0 auto; padding: 1.5rem 1.25rem; }
+        .hero { text-align: center; margin-bottom: 1.5rem; }
+        .hero h1 { font-size: 1.5rem; color: var(--spu); }
         .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 1rem; }
-        .lbl { display: block; font-size: 10px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; margin-bottom: 0.5rem; }
-        .input-wrap select, .input-wrap input { width: 100%; background: #fafafa; border: 1.5px solid rgba(0,0,0,0.06); border-radius: 0.875rem; padding: 0.875rem; font-family: 'Kanit', sans-serif; font-size: 0.95rem; margin-bottom: 1rem; outline: none; }
-        .btn-calc { width: 100%; background: var(--spu); color: white; border: none; border-radius: 1rem; padding: 1rem; font-weight: 600; cursor: pointer; font-size: 1rem; }
-        #resultArea { display: none; margin-top: 1rem; animation: slideUp 0.4s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .result-hero { background: linear-gradient(135deg, var(--spu) 0%, #ff4d9b 100%); border-radius: var(--radius); padding: 1.5rem; color: white; margin-bottom: 0.75rem; text-align: center; }
-        .result-value { font-size: 2.2rem; font-weight: 700; }
+        .lbl { display: block; font-size: 11px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; margin-bottom: 0.6rem; }
+        .input-wrap select, .input-wrap input { width: 100%; background: #fafafa; border: 1.5px solid rgba(0,0,0,0.06); border-radius: 0.875rem; padding: 0.875rem; font-family: 'Kanit', sans-serif; font-size: 1rem; margin-bottom: 1rem; outline: none; }
+        .btn-calc { width: 100%; background: var(--spu); color: white; border: none; border-radius: 1rem; padding: 1.1rem; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .btn-calc:active { transform: scale(0.98); opacity: 0.9; }
+        #resultArea { display: none; margin-top: 1.5rem; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .result-hero { background: linear-gradient(135deg, var(--spu) 0%, #ff4d9b 100%); border-radius: var(--radius); padding: 1.5rem; color: white; text-align: center; margin-bottom: 1rem; }
+        .result-value { font-size: 2.2rem; font-weight: 700; margin: 5px 0; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
-        .stat-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 1rem; text-align: center; }
-        .status-pill { padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 600; margin-top: 5px; display: inline-block; }
-        .status-ok { background: #d1fae5; color: #065f46; }
-        .status-tight { background: #fee2e2; color: #991b1b; }
+        .stat-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 1.2rem 1rem; text-align: center; }
+        .compare-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .pass { background: #d1fae5; color: #065f46; }
+        .fail { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
@@ -38,17 +41,20 @@
 <header class="header">
     <div class="header-inner">
         <div class="logo-badge">SPU</div>
-        <div style="font-size: 11px; font-weight: bold; color: var(--spu);">Engineering Tool</div>
+        <div style="font-size: 12px; font-weight: 700; color: var(--spu);">CABLE CALC PRO</div>
     </div>
 </header>
 
 <main class="main">
+    <div class="hero">
+        <h1>ตารางที่ 4.7 (Wireways)</h1>
+        <p style="font-size: 0.8rem; color: var(--ink-soft);">จำนวนสายสูงสุดของสายไฟฟ้า IEC 01</p>
+    </div>
+
     <div class="card">
-        <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--spu);">ตารางที่ 4.7 (Wireways)</h2>
-        
-        <label class="lbl">ขนาดสายไฟฟ้า IEC 01 (mm²)</label>
+        <label class="lbl">ขนาดสายไฟฟ้า (mm²)</label>
         <div class="input-wrap">
-            <select id="cableSize" onchange="hideResult()">
+            <select id="cableSize" onchange="resetView()">
                 <option value="2.5">2.5</option>
                 <option value="4">4</option>
                 <option value="6">6</option>
@@ -67,50 +73,49 @@
             </select>
         </div>
 
-        <label class="lbl">จำนวนสายที่ต้องการเดิน (เส้น)</label>
+        <label class="lbl">จำนวนสายที่ต้องการ (เส้น)</label>
         <div class="input-wrap">
-            <input type="number" id="cableQty" value="10" min="1" oninput="hideResult()">
+            <input type="number" id="cableQty" value="1" min="1" oninput="resetView()">
         </div>
 
-        <button class="btn-calc" onclick="calculate()">ตรวจสอบขนาดรางที่เหมาะสม</button>
+        <button class="btn-calc" onclick="calculate()">แสดงขนาดรางที่เหมาะสม</button>
     </div>
 
     <div id="resultArea">
         <div class="result-hero">
-            <div style="font-size:12px; opacity:0.9">รางเดินสายที่แนะนำ</div>
+            <div style="font-size: 12px; opacity: 0.9;">ขนาดรางที่เหมาะสมที่สุด</div>
             <div class="result-value" id="recSize">—</div>
-            <div id="recStatusText" style="margin-top:5px; font-size:0.9rem;">—</div>
+            <div id="recNote" style="font-size: 0.85rem; opacity: 0.9;">อ้างอิงตามมาตรฐาน วสท.</div>
         </div>
 
         <div class="stat-grid">
             <div class="stat-card">
                 <div class="lbl">จำนวนสูงสุดที่รับได้</div>
-                <div style="font-weight:700; font-size:1.2rem;" id="maxQty">—</div>
+                <div style="font-weight: 700; font-size: 1.3rem; color: var(--spu);" id="maxCap">—</div>
             </div>
             <div class="stat-card">
-                <div class="lbl">สถานะการติดตั้ง</div>
-                <div id="statusBadge">—</div>
+                <div class="lbl">สถานะ</div>
+                <div id="statusLabel">—</div>
             </div>
         </div>
 
         <div class="card">
-            <div class="lbl">เปรียบเทียบขนาดรางทั้งหมด (จำนวนเส้นสูงสุด)</div>
-            <div id="compareList" style="font-size: 0.85rem;"></div>
+            <div class="lbl" style="margin-bottom: 1rem;">เปรียบเทียบขนาดราง (สาย IEC 01)</div>
+            <div id="compareList"></div>
         </div>
     </div>
 </main>
 
 <script>
-    // ข้อมูลอ้างอิงตรงตาม ตารางที่ 4.7
-    // โครงสร้าง: cableSize: { wirewayName: maxQty }
-    const table47Data = {
+    // ข้อมูล Mapping ตรงตามตาราง 4.7 ในรูปภาพ
+    const wirewayTable = {
         "2.5": { "50x75": 59 },
         "4":   { "50x75": 45 },
         "6":   { "50x75": 35, "50x100": 47 },
         "10":  { "50x75": 21, "50x100": 28 },
         "16":  { "50x75": 15, "50x100": 20, "75x100": 31, "100x100": 41 },
         "25":  { "50x75": 10, "50x100": 13, "75x100": 20, "100x100": 27 },
-        "35":  { "50x75": 8,  "50x100": 10, "75x100": 16, "100x100": 21, "100x150": 32 },
+        "35":  { "50x75": 8, "50x100": 10, "75x100": 16, "100x100": 21, "100x150": 32 },
         "50":  { "50x100": 7, "75x100": 11, "100x100": 15, "100x150": 23, "100x200": 31, "100x250": 38 },
         "70":  { "100x150": 17, "100x200": 23, "100x250": 29, "100x300": 35 },
         "95":  { "100x150": 13, "100x200": 17, "100x250": 21, "100x300": 26, "150x300": 39 },
@@ -121,52 +126,46 @@
         "300": { "150x300": 13 }
     };
 
-    function hideResult() {
+    const wirewayOrder = ["50x75", "50x100", "75x100", "100x100", "100x150", "100x200", "100x250", "100x300", "150x300"];
+
+    function resetView() {
         document.getElementById('resultArea').style.display = 'none';
     }
 
     function calculate() {
         const size = document.getElementById('cableSize').value;
         const qty = parseInt(document.getElementById('cableQty').value) || 0;
-        const wirewayOptions = table47Data[size];
+        const options = wirewayTable[size];
         
         let recommended = null;
-        let compareHtml = "";
+        let html = "";
 
-        // เรียงลำดับขนาดรางที่มีให้เลือกสำหรับขนาดสายนั้นๆ
-        const names = Object.keys(wirewayOptions);
-        
-        names.forEach(name => {
-            const max = wirewayOptions[name];
-            const isFit = qty <= max;
-            
-            if (isFit && !recommended) {
-                recommended = { name, max };
+        wirewayOrder.forEach(name => {
+            const max = options[name];
+            if (max !== undefined) {
+                const isPass = qty <= max;
+                if (isPass && !recommended) recommended = { name, max };
+
+                html += `
+                    <div class="compare-item">
+                        <span>ราง <b>${name}</b></span>
+                        <span>สูงสุด <b>${max}</b> เส้น <span class="status-pill ${isPass ? 'pass' : 'fail'}">${isPass ? 'ผ่าน' : 'เกิน'}</span></span>
+                    </div>
+                `;
             }
-
-            compareHtml += `
-                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
-                    <span>ราง <b>${name}</b></span>
-                    <span>รับได้สูงสุด <b>${max}</b> เส้น 
-                        ${isFit ? '<span style="color:green"> (ผ่าน)</span>' : '<span style="color:red"> (เกิน)</span>'}
-                    </span>
-                </div>
-            `;
         });
 
         if (recommended) {
             document.getElementById('recSize').textContent = recommended.name;
-            document.getElementById('maxQty').textContent = recommended.max + " เส้น";
-            document.getElementById('recStatusText').textContent = "สามารถใช้เดินสายได้ตามมาตรฐาน";
-            document.getElementById('statusBadge').innerHTML = '<span class="status-pill status-ok">ผ่านเกณฑ์</span>';
+            document.getElementById('maxCap').textContent = recommended.max + " เส้น";
+            document.getElementById('statusLabel').innerHTML = '<span class="status-pill pass">ปลอดภัย</span>';
         } else {
             document.getElementById('recSize').textContent = "ไม่พบขนาดราง";
-            document.getElementById('maxQty').textContent = "—";
-            document.getElementById('recStatusText').textContent = "จำนวนสายเกินกว่าที่รางใหญ่ที่สุดจะรับได้";
-            document.getElementById('statusBadge').innerHTML = '<span class="status-pill status-tight">พื้นที่ไม่พอ</span>';
+            document.getElementById('maxCap').textContent = "—";
+            document.getElementById('statusLabel').innerHTML = '<span class="status-pill fail">พื้นที่ไม่พอ</span>';
         }
 
-        document.getElementById('compareList').innerHTML = compareHtml;
+        document.getElementById('compareList').innerHTML = html || "<div style='text-align:center; padding:20px; color:#999;'>ไม่มีข้อมูลขนาดรางสำหรับสายขนาดนี้</div>";
         document.getElementById('resultArea').style.display = 'block';
     }
 </script>
