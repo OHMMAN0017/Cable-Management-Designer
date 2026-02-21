@@ -3,202 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SPU Cable Calc & Price Comparison (V4.7 Table Updated)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>SPU Cable Calc Pro V2.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #fffafb; -webkit-tap-highlight-color: transparent; }
-        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(231, 2, 116, 0.08); border: 1px solid rgba(231, 2, 116, 0.05); }
-        .spu-gradient { background: linear-gradient(135deg, #e70274 0%, #ff5e9e 100%); }
-        .spu-text { color: #e70274; }
-        .install-radio:checked + div { border-color: #e70274; background-color: #fff0f6; color: #e70274; box-shadow: 0 0 0 1px #e70274; }
-        .selected-size-card { border: 2px solid #e70274 !important; background-color: #fff0f6 !important; }
-        .footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; padding: 12px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid rgba(231, 2, 116, 0.1); display: flex; align-items: center; z-index: 50; }
+        /* (Style คงเดิมจากของเดิม แต่ปรับสีสถานะให้ชัดเจนขึ้น) */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --spu: #e70274; --spu-dark: #b8005c; --spu-light: #ff5e9e; --spu-pale: #fff0f7;
+            --ink: #1a0a12; --ink-soft: #6b4a5a; --surface: #fffafb; --card: #ffffff;
+            --border: rgba(231, 2, 116, 0.08); --shadow: 0 8px 32px -8px rgba(231, 2, 116, 0.18); --radius: 1.25rem;
+        }
+        body { font-family: 'Kanit', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; position: relative; }
+        .header { background: rgba(255, 255, 255, 0.8); border-bottom: 1px solid var(--border); padding: 0 1.5rem; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+        .header-inner { max-width: 480px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-badge { width: 36px; height: 36px; background: linear-gradient(135deg, var(--spu) 0%, var(--spu-light) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 11px; color: white; font-weight: 700; }
+        .logo-text strong { display: block; font-size: 12px; color: var(--spu); font-weight: 700; }
+        .logo-text span { font-size: 9px; color: var(--ink-soft); font-weight: 300; }
+        .main { max-width: 480px; margin: 0 auto; padding: 1.5rem 1.25rem 7rem; }
+        .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; padding: 1.5rem; margin-bottom: 1rem; }
+        .lbl { display: block; font-size: 10px; font-weight: 600; color: var(--ink-soft); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .input-wrap select, .input-wrap input { width: 100%; background: #fafafa; border: 1.5px solid rgba(0,0,0,0.06); border-radius: 0.875rem; padding: 0.875rem; font-family: 'Kanit', sans-serif; font-size: 0.95rem; outline: none; }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; }
+        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.5rem; }
+        .radio-option input { display: none; }
+        .radio-face { display: flex; align-items: center; justify-content: center; padding: 0.75rem; border-radius: 0.875rem; border: 1.5px solid rgba(0,0,0,0.07); background: #fafafa; font-size: 0.85rem; cursor: pointer; }
+        .radio-option input:checked + .radio-face { border-color: var(--spu); background: var(--spu-pale); color: var(--spu); }
+        .btn-calc { width: 100%; background: linear-gradient(135deg, var(--spu) 0%, var(--spu-light) 100%); color: white; border: none; border-radius: 1rem; padding: 1rem; font-weight: 600; margin-top: 1.5rem; box-shadow: 0 6px 20px -4px rgba(231,2,116,0.45); }
+        .result-hero { background: linear-gradient(135deg, var(--spu) 0%, #ff4d9b 100%); border-radius: var(--radius); padding: 1.5rem; color: white; margin-top: 1rem; display: none; }
+        .result-hero.show { display: block; }
+        .size-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+        .size-chip { padding: 0.5rem 0.8rem; border-radius: 0.75rem; border: 1.5px solid var(--border); background: white; font-size: 0.8rem; }
+        .size-chip.recommended { border-color: var(--spu); background: var(--spu-pale); color: var(--spu); font-weight: bold; }
+        .status-pill { padding: 2px 8px; border-radius: 99px; font-size: 10px; }
+        .status-ok { background: #d1fae5; color: #065f46; }
+        .status-tight { background: #fee2e2; color: #991b1b; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 200; align-items: flex-end; }
+        .modal-overlay.open { display: flex; }
+        .modal-sheet { width: 100%; max-width: 480px; margin: 0 auto; background: white; border-radius: 1.75rem 1.75rem 0 0; padding: 1.5rem; }
+        .compare-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+        .compare-table th, .compare-table td { padding: 0.8rem; border-bottom: 1px solid #eee; text-align: left; }
     </style>
 </head>
-<body class="antialiased text-slate-700 pb-24">
-    <div class="max-w-md mx-auto px-6 pt-8">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold spu-text tracking-tight">Cable Containment Pro</h1>
-            <p class="text-slate-400 text-xs font-light uppercase tracking-widest">Table 4.7 Verified Edition</p>
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <div class="logo">
+            <div class="logo-badge">SPU</div>
+            <div class="logo-text"><strong>Cable Calc Pro</strong><span>Faculty of Engineering</span></div>
         </div>
-
-        <div class="card p-6 mb-6">
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="col-span-2">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ประเภทสายไฟ</label>
-                        <select id="cableType" class="w-full rounded-xl border-slate-100 bg-slate-50 p-3 border appearance-none outline-none focus:ring-2 focus:ring-pink-500">
-                            <option value="iec01">IEC 01 (ตามตาราง 4.7)</option>
-                            <option value="nyy1c">NYY 1/C</option>
-                            <option value="xlpe1c">XLPE 1/C</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ขนาด (mm²)</label>
-                        <select id="cableSize" class="w-full rounded-xl border-slate-100 bg-slate-50 p-3 border outline-none"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">จำนวน (เส้น)</label>
-                        <input type="number" id="cableQty" value="3" class="w-full rounded-xl border-slate-100 bg-slate-50 p-3 border text-center font-bold">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                    <label class="cursor-pointer">
-                        <input type="radio" name="installType" value="conduit" checked class="hidden install-radio">
-                        <div class="text-center p-2 rounded-xl border border-slate-100 bg-slate-50 text-xs font-medium transition-all">ท่อ EMT</div>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="installType" value="wireway" class="hidden install-radio">
-                        <div class="text-center p-2 rounded-xl border border-slate-100 bg-slate-50 text-xs font-medium transition-all">ราง Wireway</div>
-                    </label>
-                </div>
-
-                <button onclick="calculate()" class="w-full spu-gradient text-white py-3.5 rounded-xl font-bold shadow-lg shadow-pink-100 active:scale-95 transition-all">
-                    คำนวณและเช็คราคา
-                </button>
-            </div>
-        </div>
-
-        <div id="resultArea" class="hidden space-y-4">
-            <div class="card p-5 spu-gradient text-white">
-                <p class="text-[10px] uppercase tracking-widest opacity-80 mb-1">ขนาดที่เหมาะสมที่สุด (Best Value)</p>
-                <div class="flex justify-between items-end">
-                    <h2 id="recSize" class="text-3xl font-bold">-</h2>
-                    <div class="text-right">
-                        <p class="text-[10px] opacity-80">ราคาประมาณการ</p>
-                        <p id="recPrice" class="text-xl font-bold">฿0</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card overflow-hidden">
-                <div class="bg-slate-50 p-3 border-b border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">ตัวเลือกอื่นๆ และการเปรียบเทียบ</h3>
-                </div>
-                <div id="comparisonList" class="divide-y divide-slate-50"></div>
-            </div>
-
-            <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100 flex gap-3">
-                <div class="text-blue-500 pt-1">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"></path></svg>
-                </div>
-                <div>
-                    <p class="text-[11px] text-blue-800 leading-relaxed">
-                        <b>ข้อมูลอ้างอิง:</b> ตารางที่ 4.7 จำนวนสายสูงสุดในรางเดินสาย (20% Fill Factor) และราคาวัสดุอ้างอิง ณ ปี 2026
-                    </p>
-                </div>
-            </div>
-        </div>
+        <div class="version-badge" style="background:var(--spu-pale); font-size:10px; padding:2px 8px; border-radius:10px; color:var(--spu)">V2.1</div>
     </div>
+</header>
 
-    <div class="footer-fixed">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 spu-bg rounded-lg flex items-center justify-center text-white font-black text-xs spu-gradient">SPU</div>
+<main class="main">
+    <div class="card">
+        <label class="lbl">ประเภทสายไฟฟ้า</label>
+        <div class="input-wrap">
+            <select id="cableType" onchange="updateSizes()">
+                <option value="iec01">IEC 01 (THW)</option>
+                <option value="nyy1c">NYY 1/C</option>
+                <option value="xlpe1c">XLPE 1/C</option>
+            </select>
+        </div>
+
+        <div class="grid2">
             <div>
-                <p class="text-[11px] font-bold spu-text leading-tight">Sripatum University</p>
-                <p class="text-[9px] text-slate-400">Electrical Engineering Tool</p>
+                <label class="lbl">ขนาดสาย (mm²)</label>
+                <select id="cableSize" class="input-wrap" style="width:100%; padding:0.8rem; border-radius:0.8rem; border:1.5px solid #eee"></select>
+            </div>
+            <div>
+                <label class="lbl">จำนวน (เส้น)</label>
+                <input type="number" id="cableQty" value="3" min="1" class="input-wrap" style="width:100%; padding:0.8rem; border-radius:0.8rem; border:1.5px solid #eee">
             </div>
         </div>
+
+        <div style="margin-top:1.5rem">
+            <label class="lbl">ระบบการติดตั้ง</label>
+            <div class="radio-grid">
+                <label class="radio-option">
+                    <input type="radio" name="installType" value="conduit" checked>
+                    <div class="radio-face">ท่อร้อยสาย (Conduit)</div>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="installType" value="wireway">
+                    <div class="radio-face">รางเดินสาย (Wireway)</div>
+                </label>
+            </div>
+        </div>
+
+        <button class="btn-calc" onclick="calculate()">คำนวณตามมาตรฐาน วสท.</button>
     </div>
 
-    <script>
-        // อัปเดตขนาดสายตามตาราง 4.7 ในรูปภาพ (mm2)
-        const cableData = {
-            iec01: { 
-                "1.0": 7.1, "1.5": 8.5, "2.5": 12.5, "4": 16.6, "6": 21.2, 
-                "10": 35.2, "16": 47.7, "25": 73.8, "35": 93.9, "50": 129, 
-                "70": 167, "95": 230, "120": 278, "150": 343, "185": 430, 
-                "240": 560, "300": 700, "400": 935, "500": 1180 
-            },
-            nyy1c: { "1.5": 66.5, "2.5": 75.4, "4": 86.6, "6": 95, "10": 113, "16": 133 },
-            xlpe1c: { "1.5": 33.1, "2.5": 38.4, "4": 44.1, "6": 50.2, "10": 56.7, "16": 70.8 }
-        };
+    <div id="resultArea" class="result-hero">
+        <div style="font-size:10px; opacity:0.8">แนะนำขนาดที่เหมาะสม</div>
+        <div id="recSize" style="font-size:2rem; font-weight:700">—</div>
+        <div id="recSub" style="font-size:0.85rem; margin-top:0.5rem"></div>
+        <div style="margin-top:1rem; height:6px; background:rgba(255,255,255,0.2); border-radius:10px">
+            <div id="fillBar" style="height:100%; background:white; border-radius:10px; width:0%; transition:0.5s"></div>
+        </div>
+        <div id="fillLabel" style="font-size:10px; margin-top:5px; text-align:right">0%</div>
+    </div>
 
-        const conduitData = [
-            { name: "1/2\"", area40: 71, price: 145 },
-            { name: "3/4\"", area40: 126, price: 195 },
-            { name: "1\"", area40: 196, price: 290 },
-            { name: "1 1/4\"", area40: 322, price: 420 },
-            { name: "1 1/2\"", area40: 503, price: 550 },
-            { name: "2\"", area40: 785, price: 780 }
-        ];
+    <div id="chipContainer" style="display:none; margin-top:1rem" class="card">
+        <label class="lbl">ขนาดอื่นๆ เพื่อเปรียบเทียบ</label>
+        <div id="sizeChips" class="size-chips"></div>
+    </div>
+</main>
 
-        // อัปเดตขนาดรางเดินสายตามหัวตารางในรูปภาพ
-        const wirewayData = [
-            { name: "50x75", area20: 750, price: 380 },
-            { name: "50x100", area20: 1000, price: 450 },
-            { name: "75x100", area20: 1500, price: 580 },
-            { name: "100x100", area20: 2000, price: 720 },
-            { name: "100x150", area20: 3000, price: 950 },
-            { name: "100x200", area20: 4000, price: 1250 },
-            { name: "100x250", area20: 5000, price: 1550 },
-            { name: "100x300", area20: 6000, price: 1850 },
-            { name: "150x300", area20: 9000, price: 2400 }
-        ];
+<div class="modal-overlay" id="compareModal" onclick="closeModal(event)">
+    <div class="modal-sheet">
+        <h3 id="modalTitle">รายละเอียดการคำนวณ</h3>
+        <p id="modalSub" style="font-size:0.8rem; color:var(--ink-soft); margin-bottom:1rem"></p>
+        <table class="compare-table">
+            <thead><tr><th>ขนาด</th><th>ใช้งานจริง</th><th>สถานะ</th></tr></thead>
+            <tbody id="compareBody"></tbody>
+        </table>
+        <div style="margin-top:1rem; font-size:0.75rem; color:var(--spu); background:var(--spu-pale); padding:10px; border-radius:10px">
+            * เกณฑ์สูงสุด: 1 เส้น=53%, 2 เส้น=31%, 3+ เส้น=40% (ท่อ) / 20% (ราง)
+        </div>
+    </div>
+</div>
 
-        function updateSizes() {
-            const type = document.getElementById('cableType').value;
-            const sizeSelect = document.getElementById('cableSize');
-            sizeSelect.innerHTML = '';
-            Object.keys(cableData[type]).forEach(size => {
-                let opt = document.createElement('option');
-                opt.value = size; opt.innerHTML = size;
-                sizeSelect.appendChild(opt);
-            });
+<script>
+    const cableData = {
+        iec01:  { "1.5":8.5, "2.5":12.5, "4":16.6, "6":21.2, "10":35.2, "16":47.7, "25":73.8, "35":93.9, "50":129, "70":167, "95":230, "120":278, "150":343 },
+        nyy1c:  { "1":60.8, "1.5":66.5, "2.5":75.4, "4":86.6, "6":95, "10":113, "16":133, "25":165, "35":201, "50":227, "70":284, "95":363, "120":416 },
+        xlpe1c: { "1.5":33.1, "2.5":38.4, "4":44.1, "6":50.2, "10":56.7, "16":70.8, "25":104, "35":123, "50":154, "70":189, "95":241 }
+    };
+
+    // Conduit Area (Area หน้าตัดท่อเต็ม 100%)
+    const conduitData = [ 
+        {name:'1/2"', area:191}, {name:'3/4"', area:314}, {name:'1"', area:491}, 
+        {name:'1¼"', area:804}, {name:'1½"', area:1257}, {name:'2"', area:1963}, 
+        {name:'2½"', area:3318}, {name:'3"', area:5027} 
+    ];
+
+    // Wireway (กว้าง x สูง = Area เต็ม 100%)
+    const wirewayData = [ 
+        {name:"50×75", w:50, h:75}, {name:"50×100", w:50, h:100}, 
+        {name:"75×100", w:75, h:100}, {name:"100×100", w:100, h:100}, 
+        {name:"100×150", w:100, h:150}, {name:"150×150", w:150, h:150} 
+    ].map(item => ({...item, area: item.w * item.h}));
+
+    function updateSizes() {
+        const type = document.getElementById('cableType').value;
+        const sel = document.getElementById('cableSize'); sel.innerHTML = '';
+        Object.keys(cableData[type]).forEach(s => sel.add(new Option(s, s)));
+    }
+    updateSizes();
+
+    let lastCalc = null;
+
+    function calculate() {
+        const type = document.getElementById('cableType').value;
+        const size = document.getElementById('cableSize').value;
+        const qty = parseInt(document.getElementById('cableQty').value) || 1;
+        const install = document.querySelector('input[name="installType"]:checked').value;
+
+        // พื้นที่หน้าตัดสายไฟรวม
+        const totalCableArea = cableData[type][size] * qty;
+        
+        // กำหนด Fill Factor ตามจำนวนเส้น (มาตรฐาน วสท.)
+        let maxLimit;
+        if (install === 'conduit') {
+            if (qty === 1) maxLimit = 0.53;
+            else if (qty === 2) maxLimit = 0.31;
+            else maxLimit = 0.40;
+        } else {
+            // รางเดินสาย ปกติคิดที่ 20% (เว้นแต่สายเส้นเดียวขนาดใหญ่พิเศษ แต่ทั่วไปใช้เกณฑ์ 20%)
+            maxLimit = 0.20;
+            if (qty === 1) maxLimit = 0.53; // กรณีเส้นเดียว
         }
 
-        document.getElementById('cableType').onchange = updateSizes;
-        updateSizes();
+        const dataset = install === 'conduit' ? conduitData : wirewayData;
 
-        function calculate() {
-            const type = document.getElementById('cableType').value;
-            const size = document.getElementById('cableSize').value;
-            const qty = parseInt(document.getElementById('cableQty').value) || 0;
-            const installType = document.querySelector('input[name="installType"]:checked').value;
+        const allOptions = dataset.map(item => {
+            const usedPct = (totalCableArea / item.area) * 100;
+            return {
+                ...item,
+                usedPct: usedPct.toFixed(1),
+                limit: (maxLimit * 100).toFixed(0),
+                fits: (totalCableArea / item.area) <= maxLimit
+            };
+        });
 
-            const totalCableArea = cableData[type][size] * qty;
-            const masterList = installType === 'conduit' ? conduitData : wirewayData;
-            const limitField = installType === 'conduit' ? 'area40' : 'area20';
+        const recommended = allOptions.find(o => o.fits) || allOptions[allOptions.length-1];
 
-            const possibleOptions = masterList.filter(item => item[limitField] >= totalCableArea);
-            
-            const resArea = document.getElementById('resultArea');
-            resArea.classList.remove('hidden');
+        lastCalc = { totalCableArea, qty, install, allOptions, recommended, maxLimit };
+        
+        // Render
+        document.getElementById('resultArea').classList.add('show');
+        document.getElementById('chipContainer').style.display = 'block';
+        document.getElementById('recSize').textContent = (install === 'conduit' ? 'ท่อ ' : 'ราง ') + recommended.name;
+        document.getElementById('recSub').innerHTML = `พื้นที่สายรวม: ${totalCableArea.toFixed(1)} mm²<br>ใช้ไป ${recommended.usedPct}% (เกณฑ์สูงสุด ${maxLimit*100}%)`;
+        document.getElementById('fillBar').style.width = Math.min((recommended.usedPct / (maxLimit*100)) * 100, 100) + '%';
+        document.getElementById('fillLabel').textContent = recommended.usedPct + '%';
 
-            if (possibleOptions.length > 0) {
-                const best = possibleOptions[0];
-                document.getElementById('recSize').innerText = (installType === 'conduit' ? "ท่อ " : "ราง ") + best.name;
-                document.getElementById('recPrice').innerText = "฿" + best.price.toLocaleString();
-                renderComparison(possibleOptions, totalCableArea, limitField);
-            } else {
-                document.getElementById('recSize').innerText = "เกินขนาดมาตรฐาน";
-                document.getElementById('recPrice').innerText = "฿-";
-                document.getElementById('comparisonList').innerHTML = '<p class="p-4 text-center text-red-500">พื้นที่รวมสายไฟเกินความจุของรางขนาดใหญ่ที่สุด</p>';
-            }
-        }
+        const chips = document.getElementById('sizeChips');
+        chips.innerHTML = '';
+        allOptions.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'size-chip' + (opt === recommended ? ' recommended' : '');
+            btn.textContent = opt.name;
+            btn.onclick = () => showDetail(idx);
+            chips.appendChild(btn);
+        });
+    }
 
-        function renderComparison(options, cableArea, limitField) {
-            const list = document.getElementById('comparisonList');
-            list.innerHTML = '';
-            options.forEach((item, index) => {
-                const fillRate = ((cableArea / item[limitField]) * 100).toFixed(1);
-                const div = document.createElement('div');
-                div.className = `p-4 flex items-center justify-between cursor-pointer transition-all hover:bg-slate-50 ${index === 0 ? 'selected-size-card' : ''}`;
-                div.innerHTML = `
-                    <div class="flex flex-col">
-                        <span class="text-sm font-bold text-slate-800">${item.name}</span>
-                        <span class="text-[10px] text-slate-500 italic">พื้นที่ใช้งานจริง: ${fillRate}% ของเกณฑ์มาตรฐาน</span>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-bold spu-text">฿${item.price.toLocaleString()}</p>
-                        <p class="text-[9px] text-slate-400">${index === 0 ? 'ขนาดที่ประหยัดที่สุด' : 'ส่วนต่าง +฿' + (item.price - options[0].price).toLocaleString()}</p>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-    </script>
+    function showDetail(idx) {
+        const c = lastCalc;
+        const opt = c.allOptions[idx];
+        document.getElementById('modalSub').textContent = `พื้นที่สายไฟ ${c.totalCableArea.toFixed(1)} mm² / พื้นที่หน้าตัดอุปกรณ์เต็ม ${opt.area} mm²`;
+        
+        const tbody = document.getElementById('compareBody');
+        tbody.innerHTML = c.allOptions.map(o => `
+            <tr style="${o === opt ? 'background:var(--spu-pale)' : ''}">
+                <td>${o.name}</td>
+                <td>${o.usedPct}%</td>
+                <td><span class="status-pill ${o.fits ? 'status-ok' : 'status-tight'}">${o.fits ? 'ผ่าน' : 'ไม่ผ่าน'}</span></td>
+            </tr>
+        `).join('');
+        document.getElementById('compareModal').classList.add('open');
+    }
+
+    function closeModal(e) { if(e.target.id === 'compareModal') e.target.classList.remove('open'); }
+</script>
 </body>
 </html>
